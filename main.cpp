@@ -108,7 +108,7 @@ void placesSort(vector<point> &v)
 
 void onRoute(Message::Ptr msg)
 {
-	vector<point> tmp_parks = parks;
+	vector<point> tmp_parks  = parks;
 	tmp_parks.erase(tmp_parks.begin());
 	vector<point> coords = {parks[0]};
 
@@ -121,10 +121,13 @@ void onRoute(Message::Ptr msg)
 
 	placesSort(coords);
 	coords.push_back(parks[0]);
-
+	int distance = 0;
 	//dst
-	for (size_t i = 0; i < coords.size()-1; ++i)
+	for (size_t i = 0; i < coords.size()-2; ++i)
+	{
 		cout << coords[i].first << ' ' << coords[i].second << endl;
+		distance += calcDist(coords[i], coords[i+1]);
+	}
 
 	// url
 	string url = "https://www.google.ru/maps/dir/";
@@ -132,7 +135,7 @@ void onRoute(Message::Ptr msg)
 		url += getCoords(coords[i]);
 	url += "data=!3m1!4b1!4m2!4m1!3e2"; // magic, don't edit
 	
-	bot.getApi().sendMessage(msg->chat->id, "Заезд на " +/* to_string(int(ceil(dst))) */to_string(readDis) + " км.\n" + url);
+	bot.getApi().sendMessage(msg->chat->id, "Заезд на " +/* to_string(int(ceil(dst))) to_string(readDis)*/ to_string(distance) + " км.\n" + url);
 }
 
 int main()
